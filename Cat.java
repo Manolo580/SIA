@@ -2,8 +2,8 @@ public class Cat extends Pet {
     private String raza;
     private String salud;
 
-    public Cat(String i, String n, int a, String r, String s){
-        super(i,n,a);
+    public Cat(String i, String n, int a, String e, String r, String s){
+        super(i, n, a, e);
         raza = r;
         salud = s;
     }

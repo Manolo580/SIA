@@ -47,4 +47,13 @@ public class Client{
         this.pets.add(pet); 
     }
 
+    public Pet getPetById(String id) {
+        for (Pet pet : this.pets) {
+            if (pet.getId().equals(id)) {
+                return pet;
+            }
+        }
+        return null;
+    }
+
 }

@@ -1,11 +1,11 @@
 public class Dog extends Pet {
     private String raza;
-    private String salud;
+    private String problema_salud;
 
-    public Dog(String i, String n, int a, String r, String s){
-        super(i,n,a);
+    public Dog(String i, String n, int a, String e, String r, String s){
+        super(i, n, a, e);
         raza = r;
-        salud = s;
+        problema_salud = s;
     }
 
     //GET
@@ -13,8 +13,8 @@ public class Dog extends Pet {
         return raza;
     }
 
-    public String getSalud(){
-        return salud;
+    public String getProblemaSalud(){
+        return problema_salud;
     }
 
     //SET
@@ -22,7 +22,7 @@ public class Dog extends Pet {
         raza = r;
     }
 
-    public void setSalud(String s){
-        salud = s;
+    public void setProblemaSalud(String s){
+        problema_salud = s;
     }
 }

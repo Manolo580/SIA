@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class ServicioMenu {
 
+    //Menu de servicios
     public static void mostrarMenu(BufferedReader reader, Map<String, Service> serviceCatalog) throws IOException {
         boolean volver = false;
 
@@ -12,31 +13,47 @@ public class ServicioMenu {
             System.out.println("1. Agregar Servicio");
             System.out.println("2. Mostrar Servicios");
             System.out.println("3. Volver al Menu Principal");
-            System.out.print("Seleccione una opcion: ");
+            System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
 
             switch (option) {
-                case "1" -> agregarServicio(reader, serviceCatalog);
-                case "2" -> mostrarServicios(serviceCatalog);
-                case "3" -> volver = true;
-                default -> System.out.println("Opción no válida.");
+                case "1":
+                    agregarServicio(reader, serviceCatalog);
+                    break;
+
+                case "2":
+                    mostrarServicios(serviceCatalog);
+                    break;
+
+                case "3":
+                    volver = true;
+                    break;
+
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
             }
         }
     }
 
+    //Agregar servicio al catalogo
     private static void agregarServicio(BufferedReader reader, Map<String, Service> serviceCatalog) throws IOException {
-        // AGREGAR SERVICIO AL CATALOGO
         System.out.println("\n--- Agregar Servicio ---");
-        System.out.print("Ingrese el ID del servicio: ");
-        String idServicio = reader.readLine();
+        System.out.println("Ingrese el ID del servicio: ");
+        String idServicio = reader.readLine().trim();
+
+        if (idServicio.isEmpty()) {
+            System.out.println("-> Error: El ID no puede estar vacío.");
+            return;
+        }
 
         if (serviceCatalog.containsKey(idServicio)) {
             System.out.println("-> Error: Ya existe un servicio con ese ID.");
             return;
         }
 
-        System.out.print("Ingrese el tipo de servicio (ej: Baño, Vacuna, Consulta Medica, Urgencia): ");
+        System.out.println("Ingrese el tipo de servicio (ej: Baño, Vacuna, Consulta Medica, Urgencia): ");
         String tipo = reader.readLine();
 
         Service servicio = new Service(tipo, idServicio, 0);
@@ -44,6 +61,7 @@ public class ServicioMenu {
         System.out.println("-> Servicio '" + tipo + "' agregado con éxito.");
     }
 
+    //Mostrar servicios del catalogo
     private static void mostrarServicios(Map<String, Service> serviceCatalog) {
         System.out.println("\n--- Servicios Disponibles ---");
         if (serviceCatalog.isEmpty()) {

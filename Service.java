@@ -1,16 +1,20 @@
-public class Service{
+import java.io.Serializable;
+
+public class Service implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     private String type;
     private String idService;
     private double cash;
 
+    //Constructor
     public Service(String type, String idService, double cash){
         this.type = type;
         this.idService = idService;
         this.cash = cash;
     }
 
-    //GET
-
+    //Get
     public String getType() {
         return type;
     }
@@ -23,8 +27,7 @@ public class Service{
         return cash;
     }
 
-    //SET
-
+    //Set
     public void setType(String type) {
         this.type = type;
     }
@@ -33,12 +36,12 @@ public class Service{
         this.idService = idService;
     }
 
-    //Sobrecarga en Service
-
+    //Sobrecarga: fijar precio sin descuento
     public void setPrice(double amount){
         this.cash = amount;
     }
 
+    //Sobrecarga: fijar precio con descuento
     public void setPrice(double amount, double discount){
         this.cash = amount - discount;
     }

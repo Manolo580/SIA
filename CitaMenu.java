@@ -6,43 +6,59 @@ import java.util.Map;
 
 public class CitaMenu {
 
+    //Menu de citas
     public static void mostrarMenu(BufferedReader reader, Map<String, Client> clientMap, Map<String, Quote> quoteMap, Map<String, Service> serviceCatalog) throws IOException {
         boolean volver = false;
 
         while (!volver) {
             System.out.println("\n----- MENU CITAS (SERVICIOS) -----");
             System.out.println("1. Agendar Cita");
-            System.out.println("2. Mostrar Citas Pendientes");
+            System.out.println("2. Calendario de Citas");
             System.out.println("3. Finalizar Cita");
             System.out.println("4. Historial de Citas");
-            System.out.println("5. Calendario de Citas");
-            System.out.println("6. Volver al Menu Principal");
-            System.out.print("Seleccione una opcion: ");
+            System.out.println("5. Volver al Menu Principal");
+            System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
 
             switch (option) {
-                case "1" -> agendarCita(reader, clientMap, quoteMap, serviceCatalog);
-                case "2" -> mostrarCitasPendientes(quoteMap);
-                case "3" -> finalizarCita(reader, quoteMap);
-                case "4" -> historialCitas(quoteMap);
-                case "5" -> calendarioCitas(quoteMap);
-                case "6" -> volver = true;
-                default -> System.out.println("Opción no válida.");
+                case "1":
+                    agendarCita(reader, clientMap, quoteMap, serviceCatalog);
+                    break;
+
+                case "2":
+                    calendarioCitas(quoteMap);
+                    break;
+
+                case "3":
+                    finalizarCita(reader, quoteMap);
+                    break;
+
+                case "4":
+                    historialCitas(quoteMap);
+                    break;
+
+                case "5":
+                    volver = true;
+                    break;
+
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
             }
         }
     }
 
+    //Agendar una nueva cita
     private static void agendarCita(BufferedReader reader, Map<String, Client> clientMap, Map<String, Quote> quoteMap, Map<String, Service> serviceCatalog) throws IOException {
-        // AGENDAR CITA
         System.out.println("\n--- Agendar Cita ---");
         if (clientMap.isEmpty()) {
             System.out.println("No hay clientes registrados en el sistema. Registre un cliente primero.");
             return;
         }
 
-        System.out.print("Ingrese el RUT del dueño: ");
-        String rutCita = reader.readLine();
+        System.out.println("Ingrese el RUT del dueño: ");
+        String rutCita = reader.readLine().trim();
         Client clienteCita = clientMap.get(rutCita);
 
         if (clienteCita == null) {
@@ -57,11 +73,11 @@ public class CitaMenu {
 
         System.out.println("\n--- Mascotas de " + clienteCita.getName() + " ---");
         for (Pet p : clienteCita.getPets()) {
-            System.out.println("- ID: " + p.getId() + " | Nombre: " + p.getName() + " | Especie: " + p.getSpecies() + " | Edad: " + p.getAge() + MascotaMenu.detalleEspecie(p));
+            System.out.println("- ID: " + p.getId() + " | Nombre: " + p.getName() + " | Especie: " + p.getSpecies() + " | Edad: " + p.getAge() + p.getDetalleEspecie());
         }
 
-        System.out.print("\nIngrese el ID de la mascota para la cita: ");
-        String idMascotaCita = reader.readLine();
+        System.out.println("\nIngrese el ID de la mascota para la cita: ");
+        String idMascotaCita = reader.readLine().trim();
         Pet mascotaCita = clienteCita.getPetById(idMascotaCita);
 
         if (mascotaCita == null) {
@@ -78,8 +94,8 @@ public class CitaMenu {
             System.out.println("- ID: " + s.getIdService() + " | Tipo: " + s.getType());
         }
 
-        System.out.print("\nIngrese el ID del servicio a agendar: ");
-        String idServicio = reader.readLine();
+        System.out.println("\nIngrese el ID del servicio a agendar: ");
+        String idServicio = reader.readLine().trim();
         Service servicioBase = serviceCatalog.get(idServicio);
 
         if (servicioBase == null) {
@@ -87,72 +103,63 @@ public class CitaMenu {
             return;
         }
 
-        System.out.print("Ingrese el monto del servicio: ");
-        double monto = Double.parseDouble(reader.readLine());
+        double monto = leerMonto(reader, "Ingrese el monto del servicio: ");
 
         Service servicioCita = new Service(servicioBase.getType(), servicioBase.getIdService(), 0);
 
-        System.out.print("¿Tiene descuento? (S/N): ");
-        String tieneDescuento = reader.readLine().toUpperCase();
-        if (tieneDescuento.equals("S")) {
-            System.out.print("Ingrese el monto del descuento: ");
-            double descuento = Double.parseDouble(reader.readLine());
-            servicioCita.setPrice(monto, descuento); // Sobrecarga con descuento
+        System.out.println("¿Tiene descuento? (S/N): ");
+        String tieneDescuento = reader.readLine().trim().toUpperCase();
+        if (tieneDescuento.startsWith("S")) {
+            double descuento = leerDescuento(reader, monto);
+            servicioCita.setPrice(monto, descuento); //Sobrecarga con descuento
         } else {
-            servicioCita.setPrice(monto); // Sobrecarga sin descuento
+            servicioCita.setPrice(monto); //Sobrecarga sin descuento
         }
 
         String fechaCita = pedirFecha(reader, "Ingrese la fecha de la cita (dd-mm-aaaa): ");
-        System.out.print("Ingrese la hora de la cita (hh:mm): ");
+        System.out.println("Ingrese la hora de la cita (hh:mm): ");
         String horaCita = reader.readLine();
 
-        String idCita = String.valueOf(quoteMap.size() + 1);
+        String idCita = generarIdCita(quoteMap);
         Quote cita = new Quote(idCita, fechaCita, horaCita, "Pendiente", clienteCita, mascotaCita, servicioCita);
         quoteMap.put(idCita, cita);
 
         System.out.println("-> Cita " + idCita + " agendada con éxito para " + mascotaCita.getName() + ".");
 
-        // MENU RAPIDO POST-AGENDAMIENTO
+        //Menu rapido post-agendamiento
         boolean seguir = true;
         while (seguir) {
             System.out.println("\n¿Qué desea hacer ahora?");
             System.out.println("1. Agendar otra cita");
             System.out.println("2. Finalizar una cita");
             System.out.println("3. Volver al Menu de Citas");
-            System.out.print("Seleccione una opcion: ");
+            System.out.println("Seleccione una opcion: ");
             String siguienteOpcion = reader.readLine();
 
             switch (siguienteOpcion) {
-                case "1" -> {
+                case "1":
                     agendarCita(reader, clientMap, quoteMap, serviceCatalog);
                     seguir = false;
-                }
-                case "2" -> {
+                    break;
+
+                case "2":
                     finalizarCita(reader, quoteMap);
                     seguir = false;
-                }
-                case "3" -> seguir = false;
-                default -> System.out.println("Opción no válida.");
+                    break;
+
+                case "3":
+                    seguir = false;
+                    break;
+
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
             }
         }
     }
 
-    private static void mostrarCitasPendientes(Map<String, Quote> quoteMap) {
-        // MOSTRAR CITAS PENDIENTES
-        System.out.println("\n--- Citas Pendientes ---");
-        List<Quote> pendientes = obtenerCitasPendientes(quoteMap);
-
-        if (pendientes.isEmpty()) {
-            System.out.println("No hay citas pendientes.");
-        } else {
-            for (Quote cita : pendientes) {
-                imprimirCita(cita);
-            }
-        }
-    }
-
+    //Finalizar una cita pendiente
     private static void finalizarCita(BufferedReader reader, Map<String, Quote> quoteMap) throws IOException {
-        // FINALIZAR CITA
         System.out.println("\n--- Finalizar Cita ---");
 
         List<Quote> pendientes = obtenerCitasPendientes(quoteMap);
@@ -169,7 +176,7 @@ public class CitaMenu {
                     + " | Servicio: " + cita.getService().getType());
         }
 
-        System.out.print("\nIngrese el ID de la cita a finalizar: ");
+        System.out.println("\nIngrese el ID de la cita a finalizar: ");
         String idCita = reader.readLine();
         Quote cita = quoteMap.get(idCita);
 
@@ -179,7 +186,7 @@ public class CitaMenu {
         }
 
         if (esServicioConResultado(cita.getService())) {
-            System.out.print("Ingrese el resultado de la cita (diagnóstico/observaciones): ");
+            System.out.println("Ingrese el resultado de la cita (diagnóstico/observaciones): ");
             String resultado = reader.readLine();
             cita.setResultado(resultado);
         }
@@ -188,8 +195,8 @@ public class CitaMenu {
         System.out.println("-> Cita " + cita.getIdQuote() + " finalizada con éxito.");
     }
 
+    //Mostrar historial de citas finalizadas
     private static void historialCitas(Map<String, Quote> quoteMap) {
-        // HISTORIAL DE CITAS FINALIZADAS
         System.out.println("\n--- Historial de Citas Finalizadas ---");
         boolean hayFinalizadas = false;
 
@@ -208,8 +215,8 @@ public class CitaMenu {
         }
     }
 
+    //Mostrar el calendario de citas pendientes ordenadas por fecha y hora
     private static void calendarioCitas(Map<String, Quote> quoteMap) {
-        // CALENDARIO: TODAS LAS CITAS PENDIENTES, DE MAS PROXIMA A MAS LEJANA
         System.out.println("\n--- Calendario de Citas Pendientes ---");
         List<Quote> pendientes = obtenerCitasPendientes(quoteMap);
 
@@ -218,13 +225,7 @@ public class CitaMenu {
             return;
         }
 
-        pendientes.sort((a, b) -> {
-            int cmpFecha = Integer.compare(valorFecha(a.getDate()), valorFecha(b.getDate()));
-            if (cmpFecha != 0) {
-                return cmpFecha;
-            }
-            return a.getHour().compareTo(b.getHour());
-        });
+        ordenarPorFechaYHora(pendientes);
 
         for (Quote cita : pendientes) {
             System.out.println(cita.getDate() + " " + cita.getHour() + " - " + cita.getPet().getName()
@@ -234,6 +235,66 @@ public class CitaMenu {
 
     //===================== METODOS DE APOYO =====================
 
+    //Pedir un monto validando que sea un numero valido y no negativo
+    private static double leerMonto(BufferedReader reader, String mensaje) throws IOException {
+        double monto = -1;
+        boolean valido = false;
+
+        while (!valido) {
+            System.out.println(mensaje);
+            String texto = reader.readLine();
+            try {
+                monto = Double.parseDouble(texto);
+                if (monto < 0) {
+                    System.out.println("-> El monto no puede ser negativo.");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("-> Debe ingresar un número válido.");
+            }
+        }
+
+        return monto;
+    }
+
+    //Pedir el descuento validando que no sea negativo ni mayor al monto del servicio
+    private static double leerDescuento(BufferedReader reader, double monto) throws IOException {
+        double descuento = -1;
+        boolean valido = false;
+
+        while (!valido) {
+            System.out.println("Ingrese el monto del descuento: ");
+            String texto = reader.readLine();
+            try {
+                descuento = Double.parseDouble(texto);
+                if (descuento < 0) {
+                    System.out.println("-> El descuento no puede ser negativo.");
+                } else if (descuento > monto) {
+                    System.out.println("-> El descuento no puede ser mayor que el monto del servicio.");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("-> Debe ingresar un número válido.");
+            }
+        }
+
+        return descuento;
+    }
+
+    //Generar un ID de cita que no choque con uno ya existente
+    private static String generarIdCita(Map<String, Quote> quoteMap) {
+        int numero = quoteMap.size() + 1;
+        String idCita = String.valueOf(numero);
+        while (quoteMap.containsKey(idCita)) {
+            numero++;
+            idCita = String.valueOf(numero);
+        }
+        return idCita;
+    }
+
+    //Obtener las citas con estado Pendiente
     private static List<Quote> obtenerCitasPendientes(Map<String, Quote> quoteMap) {
         List<Quote> pendientes = new ArrayList<>();
         for (Quote cita : quoteMap.values()) {
@@ -244,12 +305,39 @@ public class CitaMenu {
         return pendientes;
     }
 
+    //Ordenar la lista de citas por fecha y hora (ordenamiento burbuja)
+    private static void ordenarPorFechaYHora(List<Quote> pendientes) {
+        int n = pendientes.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - 1 - i; j++) {
+                Quote actual = pendientes.get(j);
+                Quote siguiente = pendientes.get(j + 1);
+
+                int fechaActual = valorFecha(actual.getDate());
+                int fechaSiguiente = valorFecha(siguiente.getDate());
+
+                boolean debeCambiar;
+                if (fechaActual == fechaSiguiente) {
+                    debeCambiar = actual.getHour().compareTo(siguiente.getHour()) > 0;
+                } else {
+                    debeCambiar = fechaActual > fechaSiguiente;
+                }
+
+                if (debeCambiar) {
+                    pendientes.set(j, siguiente);
+                    pendientes.set(j + 1, actual);
+                }
+            }
+        }
+    }
+
+    //Verificar si el servicio requiere ingresar un resultado
     private static boolean esServicioConResultado(Service service) {
-        // Solo se pide resultado si el servicio es medico, de urgencia o vacuna
         String tipo = service.getType().toLowerCase();
         return tipo.contains("medic") || tipo.contains("médic") || tipo.contains("urgencia") || tipo.contains("vacuna");
     }
 
+    //Imprimir los datos de una cita
     private static void imprimirCita(Quote cita) {
         System.out.println("\nCita: " + cita.getIdQuote() + " | Estado: " + cita.getStatus());
         System.out.println("Fecha: " + cita.getDate() + " | Hora: " + cita.getHour());
@@ -258,10 +346,11 @@ public class CitaMenu {
         System.out.println("Servicio: " + cita.getService().getType() + " | Precio: $" + cita.getService().getCash());
     }
 
+    //Pedir una fecha con formato valido
     private static String pedirFecha(BufferedReader reader, String mensaje) throws IOException {
         String fecha = null;
         while (fecha == null) {
-            System.out.print(mensaje);
+            System.out.println(mensaje);
             String texto = reader.readLine();
             fecha = formatearFecha(texto);
             if (fecha == null) {
@@ -271,8 +360,8 @@ public class CitaMenu {
         return fecha;
     }
 
+    //Validar y normalizar una fecha dd-mm-aaaa
     private static String formatearFecha(String texto) {
-        // Valida y normaliza una fecha dd-mm-aaaa sin usar java.time
         String[] partes = texto.split("-");
         if (partes.length != 3) {
             return null;
@@ -293,8 +382,8 @@ public class CitaMenu {
         }
     }
 
+    //Convertir una fecha dd-mm-aaaa en un numero comparable, ej: 08-09-2026 -> 20260908
     private static int valorFecha(String fecha) {
-        // Convierte dd-mm-aaaa en un numero comparable, ej: 08-09-2026 -> 20260908
         String[] partes = fecha.split("-");
         int dia = Integer.parseInt(partes[0]);
         int mes = Integer.parseInt(partes[1]);

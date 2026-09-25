@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class ClienteMenu {
 
+    //Menu de clientes
     public static void mostrarMenu(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
         boolean volver = false;
 
@@ -12,37 +13,53 @@ public class ClienteMenu {
             System.out.println("1. Registrar Cliente");
             System.out.println("2. Mostrar Clientes");
             System.out.println("3. Volver al Menu Principal");
-            System.out.print("Seleccione una opcion: ");
+            System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
 
             switch (option) {
-                case "1" -> registrarCliente(reader, clientMap, petMap);
-                case "2" -> mostrarClientes(clientMap);
-                case "3" -> volver = true;
-                default -> System.out.println("Opción no válida.");
+                case "1":
+                    registrarCliente(reader, clientMap, petMap);
+                    break;
+
+                case "2":
+                    mostrarClientes(clientMap);
+                    break;
+
+                case "3":
+                    volver = true;
+                    break;
+
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
             }
         }
     }
 
+    //Registrar cliente nuevo
     private static void registrarCliente(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
-        // INSERTAR CLIENTE
         System.out.println("\n--- Registro de Cliente ---");
-        System.out.print("Ingrese su RUT (11222333-4): ");
-        String rut = reader.readLine();
-        System.out.print("Ingrese su nombre: ");
-        String name = reader.readLine();
-        System.out.print("Ingrese un telefono (9 9999 9999): ");
-        String phone = reader.readLine();
+        System.out.println("Ingrese su RUT (11222333-4): ");
+        String rut = reader.readLine().trim();
+        System.out.println("Ingrese su nombre: ");
+        String name = reader.readLine().trim();
+        System.out.println("Ingrese un telefono (9 9999 9999): ");
+        String phone = reader.readLine().trim();
+
+        if (rut.isEmpty()) {
+            System.out.println("-> Error: El RUT no puede estar vacío.");
+            return;
+        }
 
         if (!clientMap.containsKey(rut)) {
             Client client = new Client(rut, name, phone);
             clientMap.put(rut, client);
             System.out.println("-> Cliente registrado con éxito.");
 
-            // PREGUNTAR SI DESEA AGREGAR MASCOTA INMEDIATAMENTE
-            System.out.print("¿Desea registrar una mascota para este cliente ahora? (S/N): ");
-            String resp = reader.readLine().toUpperCase();
+            //Preguntar si desea agregar mascota de inmediato
+            System.out.println("¿Desea registrar una mascota para este cliente ahora? (S/N): ");
+            String resp = reader.readLine().trim().toUpperCase();
             if (resp.equals("S")) {
                 MascotaMenu.registrarMascota(reader, client, petMap);
             }
@@ -52,8 +69,8 @@ public class ClienteMenu {
         }
     }
 
+    //Mostrar clientes registrados
     private static void mostrarClientes(Map<String, Client> clientMap) {
-        // MOSTRAR CLIENTES
         System.out.println("\n--- Lista de Clientes ---");
         if (clientMap.isEmpty()) {
             System.out.println("No hay clientes registrados.");

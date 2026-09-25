@@ -31,8 +31,10 @@ public class Client implements Serializable{
         return phone; 
     }
 
+    // --- CORRECCIÓN: RETORNO DE COLECCIONES ---
+    // Retorna una copia de la lista para proteger la encapsulación original
     public List<Pet> getPets() { 
-        return this.pets; 
+        return new ArrayList<>(this.pets); 
     }
 
     //Set
@@ -48,7 +50,7 @@ public class Client implements Serializable{
         this.phone = phone;
     }
 
-    //Agregar mascota a la lista del cliente
+    //Agregar mascota a la lista del cliente (Acceso seguro)
     public void addPet(Pet pet) { 
         this.pets.add(pet); 
     }
@@ -62,5 +64,4 @@ public class Client implements Serializable{
         }
         return null;
     }
-
 }

@@ -17,6 +17,9 @@ public class ClienteMenu {
 
             String option = reader.readLine();
 
+            // Prevención de NullPointerException si el flujo se corta
+            if (option == null) break; 
+
             switch (option) {
                 case "1":
                     registrarCliente(reader, clientMap, petMap);
@@ -59,8 +62,10 @@ public class ClienteMenu {
 
             //Preguntar si desea agregar mascota de inmediato
             System.out.println("¿Desea registrar una mascota para este cliente ahora? (S/N): ");
-            String resp = reader.readLine().trim().toUpperCase();
-            if (resp.equals("S")) {
+            String resp = reader.readLine();
+            
+            // --- CORRECCIÓN: CONDICIONAL FLEXIBLE ---
+            if (resp != null && resp.trim().toUpperCase().startsWith("S")) {
                 MascotaMenu.registrarMascota(reader, client, petMap);
             }
 

@@ -3,10 +3,11 @@ import java.io.Serializable;
 public class Pet implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    protected String id;
-    protected String name;
-    protected int age;
-    protected String species;
+    // --- CORRECCIÓN: ATRIBUTOS PRIVATE ---
+    private String id;
+    private String name;
+    private int age;
+    private String species;
 
     //Constructor
     public Pet(String i, String n, int a, String e){
@@ -59,5 +60,4 @@ public class Pet implements Serializable{
     public void actualizarSalud(String estado) {
         //Por defecto no hace nada: no todas las mascotas tienen este atributo
     }
-
 }

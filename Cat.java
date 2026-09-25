@@ -31,4 +31,9 @@ public class Cat extends Pet {
     public String getDetalleEspecie(){
         return " | Raza: " + raza + " | Salud: " + salud;
     }
+
+    //Sobreescritura: actualizar el estado de salud del gato
+    public void actualizarSalud(String estado){
+        salud = estado;
+    }
 }

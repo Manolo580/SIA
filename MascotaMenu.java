@@ -98,20 +98,16 @@ public class MascotaMenu {
 
         switch (opcionEspecie) {
             case "1": {
-                System.out.println("Ingrese la raza del perro: ");
-                String raza = reader.readLine();
-                System.out.println("Ingrese algún problema de salud (si no tiene, escriba 'Ninguno'): ");
-                String problemaSalud = reader.readLine();
-                nuevaMascota = new Dog(id, name, age, "Perro", raza, problemaSalud);
+                String raza = leerRaza(reader, "Ingrese la raza del perro (deje vacío si no tiene raza definida): ");
+                //El estado de salud se evalua y se actualiza recien en la primera cita (ver finalizarCita)
+                nuevaMascota = new Dog(id, name, age, "Perro", raza, "Sin evaluar");
                 break;
             }
 
             case "2": {
-                System.out.println("Ingrese la raza del gato: ");
-                String raza = reader.readLine();
-                System.out.println("Ingrese el estado de salud del gato: ");
-                String salud = reader.readLine();
-                nuevaMascota = new Cat(id, name, age, "Gato", raza, salud);
+                String raza = leerRaza(reader, "Ingrese la raza del gato (deje vacío si no tiene raza definida): ");
+                //El estado de salud se evalua y se actualiza recien en la primera cita (ver finalizarCita)
+                nuevaMascota = new Cat(id, name, age, "Gato", raza, "Sin evaluar");
                 break;
             }
 
@@ -130,6 +126,18 @@ public class MascotaMenu {
         client.addPet(nuevaMascota);
         petMap.put(id, nuevaMascota);
         System.out.println("-> Mascota '" + name + "' asignada exitosamente a " + client.getName() + ".");
+    }
+
+    //Pedir la raza de la mascota, si no se ingresa nada se asume "Sin raza"
+    private static String leerRaza(BufferedReader reader, String mensaje) throws IOException {
+        System.out.println(mensaje);
+        String raza = reader.readLine().trim();
+
+        if (raza.isEmpty()) {
+            raza = "Sin raza";
+        }
+
+        return raza;
     }
 
     //Pedir la edad de la mascota validando que sea un numero valido

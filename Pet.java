@@ -55,4 +55,9 @@ public class Pet implements Serializable{
         return "";
     }
 
+    //Actualizar el estado de salud (se sobreescribe en las subclases que lo tienen)
+    public void actualizarSalud(String estado) {
+        //Por defecto no hace nada: no todas las mascotas tienen este atributo
+    }
+
 }

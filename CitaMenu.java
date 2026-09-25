@@ -111,9 +111,9 @@ public class CitaMenu {
         String tieneDescuento = reader.readLine().trim().toUpperCase();
         if (tieneDescuento.startsWith("S")) {
             double descuento = leerDescuento(reader, monto);
-            servicioCita.setPrice(monto, descuento); //Sobrecarga con descuento
+            servicioCita.setPrice(monto, descuento); //Sobrecarga de setPrice: version con descuento
         } else {
-            servicioCita.setPrice(monto); //Sobrecarga sin descuento
+            servicioCita.setPrice(monto); //Sobrecarga de setPrice: version sin descuento
         }
 
         String fechaCita = pedirFecha(reader, "Ingrese la fecha de la cita (dd-mm-aaaa): ");
@@ -189,6 +189,15 @@ public class CitaMenu {
             System.out.println("Ingrese el resultado de la cita (diagnóstico/observaciones): ");
             String resultado = reader.readLine();
             cita.setResultado(resultado);
+
+            //Actualizar opcionalmente el estado de salud actual de la mascota
+            System.out.println("¿Desea actualizar el estado de salud de la mascota? (S/N): ");
+            String actualizar = reader.readLine().trim().toUpperCase();
+            if (actualizar.startsWith("S")) {
+                System.out.println("Ingrese el nuevo estado de salud de la mascota: ");
+                String estadoSalud = reader.readLine();
+                cita.getPet().actualizarSalud(estadoSalud); //Polimorfismo: cada subclase actualiza su propio atributo
+            }
         }
 
         cita.setStatus("Finalizada");

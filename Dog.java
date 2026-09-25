@@ -31,4 +31,9 @@ public class Dog extends Pet {
     public String getDetalleEspecie(){
         return " | Raza: " + raza + " | Problema de salud: " + problema_salud;
     }
+
+    //Sobreescritura: actualizar el problema de salud del perro
+    public void actualizarSalud(String estado){
+        problema_salud = estado;
+    }
 }

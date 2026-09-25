@@ -1,49 +1,62 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        //HASHMAP
-        Map<String, Client> clientMap = new HashMap<>();
-        Map<String, Pet> petMap = new HashMap<>();
-        Map<String, Quote> quoteMap = new HashMap<>();
-        Map<String, Service> serviceCatalog = new HashMap<>();
-
+        //Cargar datos guardados
+        Datos datos = Persistencia.cargarDatos();
+        Map<String, Client> clientMap = datos.getClientMap();
+        Map<String, Pet> petMap = datos.getPetMap();
+        Map<String, Quote> quoteMap = datos.getQuoteMap();
+        Map<String, Service> serviceCatalog = datos.getServiceCatalog();
 
         //Creacion del lector
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        //Para las opciones
+        //Menu principal
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("\n========== SISTEMA VETERINARIO (SIA) ==========");
+            System.out.println("SISTEMA VETERINARIO\n");
             System.out.println("1. Menu Servicios");
             System.out.println("2. Menu Clientes");
             System.out.println("3. Menu Mascotas");
             System.out.println("4. Menu Citas");
             System.out.println("5. Salir");
-            System.out.print("Seleccione una opcion: ");
+            System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
 
             switch (option) {
-                case "1" -> ServicioMenu.mostrarMenu(reader, serviceCatalog);
-                case "2" -> ClienteMenu.mostrarMenu(reader, clientMap, petMap);
-                case "3" -> MascotaMenu.mostrarMenu(reader, clientMap, petMap);
-                case "4" -> CitaMenu.mostrarMenu(reader, clientMap, quoteMap, serviceCatalog);
+                case "1":
+                    ServicioMenu.mostrarMenu(reader, serviceCatalog);
+                    break;
 
-                case "5" -> {
+                case "2":
+                    ClienteMenu.mostrarMenu(reader, clientMap, petMap);
+                    break;
+
+                case "3":
+                    MascotaMenu.mostrarMenu(reader, clientMap, petMap);
+                    break;
+
+                case "4":
+                    CitaMenu.mostrarMenu(reader, clientMap, quoteMap, serviceCatalog);
+                    break;
+
+                case "5":
+                    Persistencia.guardarDatos(new Datos(clientMap, petMap, quoteMap, serviceCatalog));
                     exit = true;
-                    System.out.println("Saliendo del sistema...");
-                }
+                    System.out.println("Datos guardados. Saliendo del sistema...");
+                    break;
 
-                default -> System.out.println("Opción no válida.");
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
             }
         }
 

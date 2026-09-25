@@ -1,9 +1,14 @@
-public class Pet{
+import java.io.Serializable;
+
+public class Pet implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     protected String id;
     protected String name;
     protected int age;
     protected String species;
 
+    //Constructor
     public Pet(String i, String n, int a, String e){
         id = i;
         name = n;
@@ -11,8 +16,7 @@ public class Pet{
         species = e;
     }
 
-    //GET
-
+    //Get
     public String getId() {
         return id;
     }
@@ -29,8 +33,7 @@ public class Pet{
         return species;
     }
 
-    //SET
-    
+    //Set
     public void setId(String i) {
         id = i;
     }
@@ -47,5 +50,9 @@ public class Pet{
         species = e;
     }
 
-    //Registrar a la mascota
+    //Detalle extra de la especie (se sobreescribe en las subclases)
+    public String getDetalleEspecie() {
+        return "";
+    }
+
 }

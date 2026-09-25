@@ -1,4 +1,8 @@
-public class Quote{
+import java.io.Serializable;
+
+public class Quote implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     private String idQuote;
     private String date;
     private String hour;
@@ -8,6 +12,7 @@ public class Quote{
     private Pet pet;
     private Service service;
 
+    //Constructor
     public Quote(String idQuote, String date, String hour, String status, Client client, Pet pet, Service service){
         this.idQuote = idQuote;
         this.date = date;
@@ -18,8 +23,7 @@ public class Quote{
         this.service = service;
     }
 
-    //GET
-
+    //Get
     public String getIdQuote() {
         return idQuote;
     }
@@ -52,8 +56,7 @@ public class Quote{
         return resultado;
     }
 
-    //SET
-
+    //Set
     public void setDate(String date) {
         this.date = date;
     }

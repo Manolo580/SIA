@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Datos implements Serializable{
@@ -18,19 +19,21 @@ public class Datos implements Serializable{
     }
 
     //Get
+    // --- CORRECCIÓN: RETORNO DE COLECCIONES ---
+    // Se retorna una copia de cada mapa para proteger la encapsulación original
     public Map<String, Client> getClientMap() {
-        return clientMap;
+        return new HashMap<>(clientMap);
     }
 
     public Map<String, Pet> getPetMap() {
-        return petMap;
+        return new HashMap<>(petMap);
     }
 
     public Map<String, Quote> getQuoteMap() {
-        return quoteMap;
+        return new HashMap<>(quoteMap);
     }
 
     public Map<String, Service> getServiceCatalog() {
-        return serviceCatalog;
+        return new HashMap<>(serviceCatalog);
     }
 }

@@ -13,8 +13,9 @@ public class ClienteMenu {
             System.out.println("1. Registrar Cliente");
             System.out.println("2. Mostrar Clientes");
             System.out.println("3. Buscar Cliente");
-            System.out.println("4. Eliminar Cliente");
-            System.out.println("5. Volver al Menu Principal");
+            System.out.println("4. Editar Cliente");
+            System.out.println("5. Eliminar Cliente");
+            System.out.println("6. Volver al Menu Principal");
             System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
@@ -36,10 +37,14 @@ public class ClienteMenu {
                     break;
 
                 case "4":
-                    eliminarCliente(reader, clientMap, petMap);
+                    editarCliente(reader, clientMap);
                     break;
 
                 case "5":
+                    eliminarCliente(reader, clientMap, petMap);
+                    break;
+
+                case "6":
                     volver = true;
                     break;
 
@@ -74,7 +79,7 @@ public class ClienteMenu {
             System.out.println("¿Desea registrar una mascota para este cliente ahora? (S/N): ");
             String resp = reader.readLine();
             
-            // --- CORRECCIÓN: CONDICIONAL FLEXIBLE ---
+            //Acepta S, s, Si, si, etc.
             if (resp != null && resp.trim().toUpperCase().startsWith("S")) {
                 MascotaMenu.registrarMascota(reader, client, petMap);
             }
@@ -121,6 +126,49 @@ public class ClienteMenu {
             throw new ClienteNoEncontradoException(rut);
         }
         return client;
+    }
+
+    //Editar los datos de un cliente existente
+    private static void editarCliente(BufferedReader reader, Map<String, Client> clientMap) throws IOException {
+        System.out.println("\n--- Editar Cliente ---");
+        System.out.println("Ingrese el RUT del cliente a editar: ");
+        String rut = reader.readLine().trim();
+
+        try {
+            Client client = obtenerClientePorRut(clientMap, rut);
+
+            System.out.println("¿Qué desea actualizar?");
+            System.out.println("1. Solo el telefono");
+            System.out.println("2. Nombre y telefono");
+            System.out.println("Seleccione una opcion: ");
+            String opcion = reader.readLine().trim();
+
+            switch (opcion) {
+                case "1": {
+                    System.out.println("Ingrese el nuevo telefono: ");
+                    String phone = reader.readLine().trim();
+                    client.actualizarDatos(phone); //Sobrecarga: version con un parametro
+                    System.out.println("-> Telefono actualizado con éxito.");
+                    break;
+                }
+
+                case "2": {
+                    System.out.println("Ingrese el nuevo nombre: ");
+                    String name = reader.readLine().trim();
+                    System.out.println("Ingrese el nuevo telefono: ");
+                    String phone = reader.readLine().trim();
+                    client.actualizarDatos(name, phone); //Sobrecarga: version con dos parametros
+                    System.out.println("-> Nombre y telefono actualizados con éxito.");
+                    break;
+                }
+
+                default:
+                    System.out.println("-> Opción no válida. No se actualizaron los datos.");
+                    break;
+            }
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("-> " + e.getMessage());
+        }
     }
 
     //Eliminar un cliente y, en cascada, sus mascotas asociadas

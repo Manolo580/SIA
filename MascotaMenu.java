@@ -13,8 +13,9 @@ public class MascotaMenu {
             System.out.println("1. Agregar Mascota");
             System.out.println("2. Mostrar Mascotas");
             System.out.println("3. Buscar Mascota");
-            System.out.println("4. Eliminar Mascota");
-            System.out.println("5. Volver al Menu Principal");
+            System.out.println("4. Editar Mascota");
+            System.out.println("5. Eliminar Mascota");
+            System.out.println("6. Volver al Menu Principal");
             System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
@@ -33,10 +34,14 @@ public class MascotaMenu {
                     break;
 
                 case "4":
-                    eliminarMascota(reader, clientMap, petMap);
+                    editarMascota(reader, petMap);
                     break;
 
                 case "5":
+                    eliminarMascota(reader, clientMap, petMap);
+                    break;
+
+                case "6":
                     volver = true;
                     break;
 
@@ -207,6 +212,48 @@ public class MascotaMenu {
             throw new MascotaNoEncontradaException(id);
         }
         return pet;
+    }
+
+    //Editar los datos de una mascota existente
+    private static void editarMascota(BufferedReader reader, Map<String, Pet> petMap) throws IOException {
+        System.out.println("\n--- Editar Mascota ---");
+        System.out.println("Ingrese el ID de la mascota a editar: ");
+        String id = reader.readLine().trim();
+
+        try {
+            Pet pet = obtenerMascotaPorId(petMap, id);
+
+            System.out.println("¿Qué desea actualizar?");
+            System.out.println("1. Solo el nombre");
+            System.out.println("2. Nombre y edad");
+            System.out.println("Seleccione una opcion: ");
+            String opcion = reader.readLine().trim();
+
+            switch (opcion) {
+                case "1": {
+                    System.out.println("Ingrese el nuevo nombre: ");
+                    String nombre = reader.readLine().trim();
+                    pet.actualizarDatos(nombre); //Sobrecarga: version con un parametro
+                    System.out.println("-> Nombre actualizado con éxito.");
+                    break;
+                }
+
+                case "2": {
+                    System.out.println("Ingrese el nuevo nombre: ");
+                    String nombre = reader.readLine().trim();
+                    int edad = leerEdad(reader); //Se reutiliza el metodo de validacion ya existente
+                    pet.actualizarDatos(nombre, edad); //Sobrecarga: version con dos parametros
+                    System.out.println("-> Nombre y edad actualizados con éxito.");
+                    break;
+                }
+
+                default:
+                    System.out.println("-> Opción no válida. No se actualizaron los datos.");
+                    break;
+            }
+        } catch (MascotaNoEncontradaException e) {
+            System.out.println("-> " + e.getMessage());
+        }
     }
 
     //Eliminar una mascota del sistema y de la lista de su dueño

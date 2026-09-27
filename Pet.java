@@ -3,7 +3,6 @@ import java.io.Serializable;
 public class Pet implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    // --- CORRECCIÓN: ATRIBUTOS PRIVATE ---
     private String id;
     private String name;
     private int age;
@@ -49,6 +48,17 @@ public class Pet implements Serializable{
 
     public void setSpecies(String e) {
         species = e;
+    }
+
+    //Sobrecarga: actualizar solo el nombre de la mascota
+    public void actualizarDatos(String nombre){
+        this.name = nombre;
+    }
+
+    //Sobrecarga: actualizar nombre y edad de la mascota (ej: al cumplir años)
+    public void actualizarDatos(String nombre, int edad){
+        this.name = nombre;
+        this.age = edad;
     }
 
     //Detalle extra de la especie (se sobreescribe en las subclases)

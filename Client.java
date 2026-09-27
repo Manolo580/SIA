@@ -31,8 +31,7 @@ public class Client implements Serializable{
         return phone; 
     }
 
-    // --- CORRECCIÓN: RETORNO DE COLECCIONES ---
-    // Retorna una copia de la lista para proteger la encapsulación original
+    //Retorna una copia de la lista para proteger la encapsulación original
     public List<Pet> getPets() { 
         return new ArrayList<>(this.pets); 
     }
@@ -47,6 +46,17 @@ public class Client implements Serializable{
     }
 
     public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    //Sobrecarga: actualizar solo el telefono del cliente
+    public void actualizarDatos(String phone){
+        this.phone = phone;
+    }
+
+    //Sobrecarga: actualizar nombre y telefono del cliente
+    public void actualizarDatos(String name, String phone){
+        this.name = name;
         this.phone = phone;
     }
 

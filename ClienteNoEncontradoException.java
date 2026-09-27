@@ -1,4 +1,3 @@
-//Excepcion personalizada: se lanza cuando se busca un cliente por RUT y no existe
 public class ClienteNoEncontradoException extends Exception {
 
     //Constructor

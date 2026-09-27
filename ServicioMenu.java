@@ -37,7 +37,7 @@ public class ServicioMenu {
         }
     }
 
-    //Agregar servicio al catalogo
+    //Agregar servicio
     private static void agregarServicio(BufferedReader reader, Map<String, Service> serviceCatalog) throws IOException {
         System.out.println("\n--- Agregar Servicio ---");
         System.out.println("Ingrese el ID del servicio: ");
@@ -61,7 +61,7 @@ public class ServicioMenu {
         System.out.println("-> Servicio '" + tipo + "' agregado con éxito.");
     }
 
-    //Mostrar servicios del catalogo
+    //mostrar servicios
     private static void mostrarServicios(Map<String, Service> serviceCatalog) {
         System.out.println("\n--- Servicios Disponibles ---");
         if (serviceCatalog.isEmpty()) {

@@ -27,12 +27,11 @@ public class Dog extends Pet {
         problema_salud = s;
     }
 
-    //Sobreescritura: detalle propio del perro
+    //Sobreescritura
     public String getDetalleEspecie(){
         return " | Raza: " + raza + " | Problema de salud: " + problema_salud;
     }
 
-    //Sobreescritura: actualizar el problema de salud del perro
     public void actualizarSalud(String estado){
         problema_salud = estado;
     }

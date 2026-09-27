@@ -36,12 +36,12 @@ public class Service implements Serializable{
         this.idService = idService;
     }
 
-    //Sobrecarga: fijar precio sin descuento
+    //Sobrecarga
     public void setPrice(double amount){
         this.cash = amount;
     }
 
-    //Sobrecarga: fijar precio con descuento
+    //Sobrecarga
     public void setPrice(double amount, double discount){
         this.cash = amount - discount;
     }

@@ -52,7 +52,7 @@ public class MascotaMenu {
         }
     }
 
-    //Buscar cliente existente para agregarle una mascota
+    //Buscar cliente
     private static void agregarMascotaAClienteExistente(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
         System.out.println("Agregar Mascota\n");
         if (clientMap.isEmpty()) {
@@ -81,7 +81,7 @@ public class MascotaMenu {
         }
     }
 
-    //Registrar mascota y asignarla al cliente
+    //Registrar mascota
     public static void registrarMascota(BufferedReader reader, Client client, Map<String, Pet> petMap) throws IOException {
         System.out.println("Registro de Mascota para " + client.getName() + " \n");
         System.out.println("Ingrese ID de la mascota: ");
@@ -113,14 +113,14 @@ public class MascotaMenu {
         switch (opcionEspecie) {
             case "1": {
                 String raza = leerRaza(reader, "Ingrese la raza del perro (deje vacío si no tiene raza definida): ");
-                //El estado de salud se evalua y se actualiza recien en la primera cita (ver finalizarCita)
+                //Salud se actualiza en la cita
                 nuevaMascota = new Dog(id, name, age, "Perro", raza, "Sin evaluar");
                 break;
             }
 
             case "2": {
                 String raza = leerRaza(reader, "Ingrese la raza del gato (deje vacío si no tiene raza definida): ");
-                //El estado de salud se evalua y se actualiza recien en la primera cita (ver finalizarCita)
+                //Salud se actualiza en la cita
                 nuevaMascota = new Cat(id, name, age, "Gato", raza, "Sin evaluar");
                 break;
             }
@@ -142,7 +142,7 @@ public class MascotaMenu {
         System.out.println("-> Mascota '" + name + "' asignada exitosamente a " + client.getName() + ".");
     }
 
-    //Pedir la raza de la mascota, si no se ingresa nada se asume "Sin raza"
+    //Pedir raza
     private static String leerRaza(BufferedReader reader, String mensaje) throws IOException {
         System.out.println(mensaje);
         String raza = reader.readLine().trim();
@@ -154,7 +154,7 @@ public class MascotaMenu {
         return raza;
     }
 
-    //Pedir la edad de la mascota validando que sea un numero valido
+    //Pedir edad
     private static int leerEdad(BufferedReader reader) throws IOException {
         int age = -1;
         boolean valido = false;
@@ -177,7 +177,7 @@ public class MascotaMenu {
         return age;
     }
 
-    //Mostrar mascotas registradas
+    //Mostrar mascotas
     private static void mostrarMascotas(Map<String, Pet> petMap) {
         System.out.println("\n--- Lista de Mascotas ---");
         if (petMap.isEmpty()) {
@@ -189,7 +189,7 @@ public class MascotaMenu {
         }
     }
 
-    //Buscar una mascota especifica por ID
+    //Buscar mascota
     private static void buscarMascota(BufferedReader reader, Map<String, Pet> petMap) throws IOException {
         System.out.println("\n--- Buscar Mascota ---");
         System.out.println("Ingrese el ID de la mascota: ");
@@ -204,8 +204,8 @@ public class MascotaMenu {
         }
     }
 
-    //Obtener una mascota por ID, lanzando una excepcion si no existe
-    //Sin modificador de acceso para poder reutilizarlo desde otros menus (CitaMenu)
+    //Buscar mascota por ID
+    //Sin modificador para reutilizar
     static Pet obtenerMascotaPorId(Map<String, Pet> petMap, String id) throws MascotaNoEncontradaException {
         Pet pet = petMap.get(id);
         if (pet == null) {
@@ -214,7 +214,7 @@ public class MascotaMenu {
         return pet;
     }
 
-    //Editar los datos de una mascota existente
+    //Editar mascota
     private static void editarMascota(BufferedReader reader, Map<String, Pet> petMap) throws IOException {
         System.out.println("\n--- Editar Mascota ---");
         System.out.println("Ingrese el ID de la mascota a editar: ");
@@ -233,7 +233,7 @@ public class MascotaMenu {
                 case "1": {
                     System.out.println("Ingrese el nuevo nombre: ");
                     String nombre = reader.readLine().trim();
-                    pet.actualizarDatos(nombre); //Sobrecarga: version con un parametro
+                    pet.actualizarDatos(nombre); //Sobrecarga
                     System.out.println("-> Nombre actualizado con éxito.");
                     break;
                 }
@@ -241,8 +241,8 @@ public class MascotaMenu {
                 case "2": {
                     System.out.println("Ingrese el nuevo nombre: ");
                     String nombre = reader.readLine().trim();
-                    int edad = leerEdad(reader); //Se reutiliza el metodo de validacion ya existente
-                    pet.actualizarDatos(nombre, edad); //Sobrecarga: version con dos parametros
+                    int edad = leerEdad(reader); //Reutiliza validacion
+                    pet.actualizarDatos(nombre, edad); //Sobrecarga
                     System.out.println("-> Nombre y edad actualizados con éxito.");
                     break;
                 }
@@ -256,7 +256,7 @@ public class MascotaMenu {
         }
     }
 
-    //Eliminar una mascota del sistema y de la lista de su dueño
+    //Para eliminar mascota con dueño
     private static void eliminarMascota(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
         System.out.println("\n--- Eliminar Mascota ---");
         System.out.println("Ingrese el ID de la mascota a eliminar: ");
@@ -265,7 +265,7 @@ public class MascotaMenu {
         try {
             Pet pet = obtenerMascotaPorId(petMap, id);
 
-            //Buscar al dueño para quitarla tambien de su lista de mascotas
+            //Buscar dueño
             Client duenio = buscarDuenio(clientMap, id);
             if (duenio != null) {
                 duenio.removePet(id);
@@ -278,7 +278,7 @@ public class MascotaMenu {
         }
     }
 
-    //Buscar el cliente dueño de una mascota, recorriendo el mapa de clientes
+    //Buscar dueño
     private static Client buscarDuenio(Map<String, Client> clientMap, String idMascota) {
         for (Client client : clientMap.values()) {
             if (client.getPetById(idMascota) != null) {

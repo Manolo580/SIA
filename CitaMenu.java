@@ -49,7 +49,7 @@ public class CitaMenu {
         }
     }
 
-    //Agendar una nueva cita
+    //Agendar cita
     private static void agendarCita(BufferedReader reader, Map<String, Client> clientMap, Map<String, Quote> quoteMap, Map<String, Service> serviceCatalog) throws IOException {
         System.out.println("\n--- Agendar Cita ---");
         if (clientMap.isEmpty()) {
@@ -115,9 +115,9 @@ public class CitaMenu {
         String tieneDescuento = reader.readLine().trim().toUpperCase();
         if (tieneDescuento.startsWith("S")) {
             double descuento = leerDescuento(reader, monto);
-            servicioCita.setPrice(monto, descuento); //Sobrecarga de setPrice: version con descuento
+            servicioCita.setPrice(monto, descuento); //Sobrecarga
         } else {
-            servicioCita.setPrice(monto); //Sobrecarga de setPrice: version sin descuento
+            servicioCita.setPrice(monto); //Sobrecarga
         }
 
         String fechaCita = pedirFecha(reader, "Ingrese la fecha de la cita (dd-mm-aaaa): ");
@@ -130,7 +130,7 @@ public class CitaMenu {
 
         System.out.println("-> Cita " + idCita + " agendada con éxito para " + mascotaCita.getName() + ".");
 
-        //Menu rapido post-agendamiento
+        //Menu rapido
         boolean seguir = true;
         while (seguir) {
             System.out.println("\n¿Qué desea hacer ahora?");
@@ -162,7 +162,7 @@ public class CitaMenu {
         }
     }
 
-    //Finalizar una cita pendiente
+    //Finalizar cita
     private static void finalizarCita(BufferedReader reader, Map<String, Quote> quoteMap) throws IOException {
         System.out.println("\n--- Finalizar Cita ---");
 
@@ -194,13 +194,13 @@ public class CitaMenu {
             String resultado = reader.readLine();
             cita.setResultado(resultado);
 
-            //Actualizar opcionalmente el estado de salud actual de la mascota
+            //Actualizar salud
             System.out.println("¿Desea actualizar el estado de salud de la mascota? (S/N): ");
             String actualizar = reader.readLine().trim().toUpperCase();
             if (actualizar.startsWith("S")) {
                 System.out.println("Ingrese el nuevo estado de salud de la mascota: ");
                 String estadoSalud = reader.readLine();
-                cita.getPet().actualizarSalud(estadoSalud); //Polimorfismo: cada subclase actualiza su propio atributo
+                cita.getPet().actualizarSalud(estadoSalud); //Polimorfismo
             }
         }
 
@@ -208,7 +208,7 @@ public class CitaMenu {
         System.out.println("-> Cita " + cita.getIdQuote() + " finalizada con éxito.");
     }
 
-    //Mostrar historial de citas finalizadas
+    //Historial de citas
     private static void historialCitas(Map<String, Quote> quoteMap) {
         System.out.println("\n--- Historial de Citas Finalizadas ---");
         boolean hayFinalizadas = false;
@@ -228,7 +228,7 @@ public class CitaMenu {
         }
     }
 
-    //Mostrar el calendario de citas pendientes ordenadas por fecha y hora
+    //Calendario de citas
     private static void calendarioCitas(Map<String, Quote> quoteMap) {
         System.out.println("\n--- Calendario de Citas Pendientes ---");
         List<Quote> pendientes = obtenerCitasPendientes(quoteMap);
@@ -246,9 +246,9 @@ public class CitaMenu {
         }
     }
 
-    //===================== METODOS DE APOYO =====================
+    //Metodos de apoyo
 
-    //Pedir un monto validando que sea un numero valido y no negativo
+    //Pedir monto
     private static double leerMonto(BufferedReader reader, String mensaje) throws IOException {
         double monto = -1;
         boolean valido = false;
@@ -271,7 +271,7 @@ public class CitaMenu {
         return monto;
     }
 
-    //Pedir el descuento validando que no sea negativo ni mayor al monto del servicio
+    //Pedir descuento
     private static double leerDescuento(BufferedReader reader, double monto) throws IOException {
         double descuento = -1;
         boolean valido = false;
@@ -296,7 +296,7 @@ public class CitaMenu {
         return descuento;
     }
 
-    //Generar un ID de cita que no choque con uno ya existente
+    //Generar ID
     private static String generarIdCita(Map<String, Quote> quoteMap) {
         int numero = quoteMap.size() + 1;
         String idCita = String.valueOf(numero);
@@ -307,7 +307,7 @@ public class CitaMenu {
         return idCita;
     }
 
-    //Obtener las citas con estado Pendiente
+    //Citas pendientes
     private static List<Quote> obtenerCitasPendientes(Map<String, Quote> quoteMap) {
         List<Quote> pendientes = new ArrayList<>();
         for (Quote cita : quoteMap.values()) {
@@ -318,7 +318,7 @@ public class CitaMenu {
         return pendientes;
     }
 
-    //Ordenar la lista de citas por fecha y hora (ordenamiento burbuja)
+    //Ordenar citas
     private static void ordenarPorFechaYHora(List<Quote> pendientes) {
         int n = pendientes.size();
         for (int i = 0; i < n - 1; i++) {
@@ -344,13 +344,13 @@ public class CitaMenu {
         }
     }
 
-    //Verificar si el servicio requiere ingresar un resultado
+    //Verificar resultado
     private static boolean esServicioConResultado(Service service) {
         String tipo = service.getType().toLowerCase();
         return tipo.contains("medic") || tipo.contains("médic") || tipo.contains("urgencia") || tipo.contains("vacuna");
     }
 
-    //Imprimir los datos de una cita
+    //Imprimir cita
     private static void imprimirCita(Quote cita) {
         System.out.println("\nCita: " + cita.getIdQuote() + " | Estado: " + cita.getStatus());
         System.out.println("Fecha: " + cita.getDate() + " | Hora: " + cita.getHour());
@@ -359,7 +359,7 @@ public class CitaMenu {
         System.out.println("Servicio: " + cita.getService().getType() + " | Precio: $" + cita.getService().getCash());
     }
 
-    //Pedir una fecha con formato valido
+    //Pedir fecha
     private static String pedirFecha(BufferedReader reader, String mensaje) throws IOException {
         String fecha = null;
         while (fecha == null) {
@@ -373,7 +373,7 @@ public class CitaMenu {
         return fecha;
     }
 
-    //Validar y normalizar una fecha dd-mm-aaaa
+    //Validar fecha
     private static String formatearFecha(String texto) {
         String[] partes = texto.split("-");
         if (partes.length != 3) {
@@ -395,7 +395,7 @@ public class CitaMenu {
         }
     }
 
-    //Convertir una fecha dd-mm-aaaa en un numero comparable, ej: 08-09-2026 -> 20260908
+    //Convertir fecha
     private static int valorFecha(String fecha) {
         String[] partes = fecha.split("-");
         int dia = Integer.parseInt(partes[0]);
@@ -404,7 +404,7 @@ public class CitaMenu {
         return anio * 10000 + mes * 100 + dia;
     }
 
-    //Obtener una mascota del cliente por ID, lanzando una excepcion si no le pertenece
+    //Buscar mascota del cliente
     private static Pet obtenerMascotaDelCliente(Client client, String id) throws MascotaNoEncontradaException {
         Pet pet = client.getPetById(id);
         if (pet == null) {

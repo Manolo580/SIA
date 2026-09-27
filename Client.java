@@ -31,7 +31,7 @@ public class Client implements Serializable{
         return phone; 
     }
 
-    //Retorna una copia de la lista para proteger la encapsulación original
+    //Copia de la lista
     public List<Pet> getPets() { 
         return new ArrayList<>(this.pets); 
     }
@@ -49,23 +49,23 @@ public class Client implements Serializable{
         this.phone = phone;
     }
 
-    //Sobrecarga: actualizar solo el telefono del cliente
+    //Sobrecarga
     public void actualizarDatos(String phone){
         this.phone = phone;
     }
 
-    //Sobrecarga: actualizar nombre y telefono del cliente
+    //Sobrecarga
     public void actualizarDatos(String name, String phone){
         this.name = name;
         this.phone = phone;
     }
 
-    //Agregar mascota a la lista del cliente (Acceso seguro)
+    //Agregar mascota
     public void addPet(Pet pet) { 
         this.pets.add(pet); 
     }
 
-    //Eliminar mascota de la lista del cliente por id (Acceso seguro)
+    //Eliminar mascota
     public boolean removePet(String id) {
         for (int i = 0; i < this.pets.size(); i++) {
             if (this.pets.get(i).getId().equals(id)) {

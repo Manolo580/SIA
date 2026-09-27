@@ -7,14 +7,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
 
-        //Cargar datos guardados
+        //Map
         Datos datos = Persistencia.cargarDatos();
         Map<String, Client> clientMap = datos.getClientMap();
         Map<String, Pet> petMap = datos.getPetMap();
         Map<String, Quote> quoteMap = datos.getQuoteMap();
         Map<String, Service> serviceCatalog = datos.getServiceCatalog();
 
-        //Creacion del lector
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         //Menu principal

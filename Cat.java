@@ -27,12 +27,12 @@ public class Cat extends Pet {
         salud = s;
     }
 
-    //Sobreescritura: detalle propio del gato
+    //Sobreescritura
     public String getDetalleEspecie(){
         return " | Raza: " + raza + " | Salud: " + salud;
     }
 
-    //Sobreescritura: actualizar el estado de salud del gato
+    //Sobreescritura
     public void actualizarSalud(String estado){
         salud = estado;
     }

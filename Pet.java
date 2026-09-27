@@ -50,24 +50,23 @@ public class Pet implements Serializable{
         species = e;
     }
 
-    //Sobrecarga: actualizar solo el nombre de la mascota
+    //Sobrecarga
     public void actualizarDatos(String nombre){
         this.name = nombre;
     }
 
-    //Sobrecarga: actualizar nombre y edad de la mascota (ej: al cumplir años)
+    //Sobrecarga
     public void actualizarDatos(String nombre, int edad){
         this.name = nombre;
         this.age = edad;
     }
 
-    //Detalle extra de la especie (se sobreescribe en las subclases)
+    //Detalle de especie
     public String getDetalleEspecie() {
         return "";
     }
 
-    //Actualizar el estado de salud (se sobreescribe en las subclases que lo tienen)
+    //Actualizar salud
     public void actualizarSalud(String estado) {
-        //Por defecto no hace nada: no todas las mascotas tienen este atributo
     }
 }

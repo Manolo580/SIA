@@ -10,7 +10,7 @@ public class Persistencia {
 
     private static final String ARCHIVO_DATOS = "datos_sia.dat";
 
-    //Guardar los datos en el archivo
+    //Guardar datos
     public static void guardarDatos(Datos datos) {
         ObjectOutputStream salida = null;
         try {
@@ -30,7 +30,7 @@ public class Persistencia {
         }
     }
 
-    //Cargar los datos guardados en el archivo
+    //Cargar datos
     public static Datos cargarDatos() {
         File archivo = new File(ARCHIVO_DATOS);
 
@@ -50,7 +50,7 @@ public class Persistencia {
             System.out.println("-> Error al cargar los datos guardados, se inicia con un sistema vacío: " + e.getMessage());
             return new Datos(new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>());
         } finally {
-            //Cerrar el archivo de entrada
+            // Cerrar el archivo 
             try {
                 if (entrada != null) {
                     entrada.close();

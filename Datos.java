@@ -19,7 +19,7 @@ public class Datos implements Serializable{
     }
 
     //Get
-    //Se retorna una copia de cada mapa para proteger la encapsulación original
+    //Copia de los mapas
     public Map<String, Client> getClientMap() {
         return new HashMap<>(clientMap);
     }

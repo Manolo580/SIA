@@ -20,7 +20,7 @@ public class ClienteMenu {
 
             String option = reader.readLine();
 
-            // Prevención de NullPointerException si el flujo se corta
+            //NullPointerException
             if (option == null) break; 
 
             switch (option) {
@@ -55,7 +55,7 @@ public class ClienteMenu {
         }
     }
 
-    //Registrar cliente nuevo
+    //Registrar cliente
     private static void registrarCliente(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
         System.out.println("\n--- Registro de Cliente ---");
         System.out.println("Ingrese su RUT (11222333-4): ");
@@ -70,16 +70,21 @@ public class ClienteMenu {
             return;
         }
 
+        if (name.isEmpty() || phone.isEmpty()) {
+            System.out.println("-> Error: El nombre y el telefono no pueden estar vacíos.");
+            return;
+        }
+
         if (!clientMap.containsKey(rut)) {
             Client client = new Client(rut, name, phone);
             clientMap.put(rut, client);
             System.out.println("-> Cliente registrado con éxito.");
 
-            //Preguntar si desea agregar mascota de inmediato
+            //Preguntar mascota
             System.out.println("¿Desea registrar una mascota para este cliente ahora? (S/N): ");
             String resp = reader.readLine();
             
-            //Acepta S, s, Si, si, etc.
+            //Acepta S o s
             if (resp != null && resp.trim().toUpperCase().startsWith("S")) {
                 MascotaMenu.registrarMascota(reader, client, petMap);
             }
@@ -89,7 +94,7 @@ public class ClienteMenu {
         }
     }
 
-    //Mostrar clientes registrados
+    //Mostrar clientes
     private static void mostrarClientes(Map<String, Client> clientMap) {
         System.out.println("\n--- Lista de Clientes ---");
         if (clientMap.isEmpty()) {
@@ -102,7 +107,7 @@ public class ClienteMenu {
         }
     }
 
-    //Buscar un cliente especifico por RUT
+    //Buscar cliente
     private static void buscarCliente(BufferedReader reader, Map<String, Client> clientMap) throws IOException {
         System.out.println("\n--- Buscar Cliente ---");
         System.out.println("Ingrese el RUT del cliente: ");
@@ -118,8 +123,8 @@ public class ClienteMenu {
         }
     }
 
-    //Obtener un cliente por RUT, lanzando una excepcion si no existe
-    //Sin modificador de acceso para poder reutilizarlo desde otros menus (MascotaMenu, CitaMenu)
+    //Buscar cliente por RUT
+    //Sin modificador para reutilizar
     static Client obtenerClientePorRut(Map<String, Client> clientMap, String rut) throws ClienteNoEncontradoException {
         Client client = clientMap.get(rut);
         if (client == null) {
@@ -128,7 +133,7 @@ public class ClienteMenu {
         return client;
     }
 
-    //Editar los datos de un cliente existente
+    //Editar cliente
     private static void editarCliente(BufferedReader reader, Map<String, Client> clientMap) throws IOException {
         System.out.println("\n--- Editar Cliente ---");
         System.out.println("Ingrese el RUT del cliente a editar: ");
@@ -147,7 +152,13 @@ public class ClienteMenu {
                 case "1": {
                     System.out.println("Ingrese el nuevo telefono: ");
                     String phone = reader.readLine().trim();
-                    client.actualizarDatos(phone); //Sobrecarga: version con un parametro
+
+                    if (phone.isEmpty()) {
+                        System.out.println("-> Error: El telefono no puede estar vacío.");
+                        break;
+                    }
+
+                    client.actualizarDatos(phone); //Sobrecarga
                     System.out.println("-> Telefono actualizado con éxito.");
                     break;
                 }
@@ -157,7 +168,13 @@ public class ClienteMenu {
                     String name = reader.readLine().trim();
                     System.out.println("Ingrese el nuevo telefono: ");
                     String phone = reader.readLine().trim();
-                    client.actualizarDatos(name, phone); //Sobrecarga: version con dos parametros
+
+                    if (name.isEmpty() || phone.isEmpty()) {
+                        System.out.println("-> Error: El nombre y el telefono no pueden estar vacíos.");
+                        break;
+                    }
+
+                    client.actualizarDatos(name, phone); //Sobrecarga
                     System.out.println("-> Nombre y telefono actualizados con éxito.");
                     break;
                 }
@@ -171,7 +188,7 @@ public class ClienteMenu {
         }
     }
 
-    //Eliminar un cliente y, en cascada, sus mascotas asociadas
+    //Para eliminar cliente con sus mascotas
     private static void eliminarCliente(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
         System.out.println("\n--- Eliminar Cliente ---");
         System.out.println("Ingrese el RUT del cliente a eliminar: ");
@@ -180,7 +197,7 @@ public class ClienteMenu {
         try {
             Client client = obtenerClientePorRut(clientMap, rut);
 
-            //Eliminar tambien las mascotas del cliente para no dejar registros huerfanos
+            //Eliminar mascotas
             for (Pet pet : client.getPets()) {
                 petMap.remove(pet.getId());
             }

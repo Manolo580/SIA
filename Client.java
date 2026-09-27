@@ -55,6 +55,17 @@ public class Client implements Serializable{
         this.pets.add(pet); 
     }
 
+    //Eliminar mascota de la lista del cliente por id (Acceso seguro)
+    public boolean removePet(String id) {
+        for (int i = 0; i < this.pets.size(); i++) {
+            if (this.pets.get(i).getId().equals(id)) {
+                this.pets.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Buscar mascota por id
     public Pet getPetById(String id) {
         for (Pet pet : this.pets) {

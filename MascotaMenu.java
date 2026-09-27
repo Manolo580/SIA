@@ -13,7 +13,8 @@ public class MascotaMenu {
             System.out.println("1. Agregar Mascota");
             System.out.println("2. Mostrar Mascotas");
             System.out.println("3. Buscar Mascota");
-            System.out.println("4. Volver al Menu Principal");
+            System.out.println("4. Eliminar Mascota");
+            System.out.println("5. Volver al Menu Principal");
             System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
@@ -32,6 +33,10 @@ public class MascotaMenu {
                     break;
 
                 case "4":
+                    eliminarMascota(reader, clientMap, petMap);
+                    break;
+
+                case "5":
                     volver = true;
                     break;
 
@@ -202,5 +207,37 @@ public class MascotaMenu {
             throw new MascotaNoEncontradaException(id);
         }
         return pet;
+    }
+
+    //Eliminar una mascota del sistema y de la lista de su dueño
+    private static void eliminarMascota(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
+        System.out.println("\n--- Eliminar Mascota ---");
+        System.out.println("Ingrese el ID de la mascota a eliminar: ");
+        String id = reader.readLine().trim();
+
+        try {
+            Pet pet = obtenerMascotaPorId(petMap, id);
+
+            //Buscar al dueño para quitarla tambien de su lista de mascotas
+            Client duenio = buscarDuenio(clientMap, id);
+            if (duenio != null) {
+                duenio.removePet(id);
+            }
+
+            petMap.remove(id);
+            System.out.println("-> Mascota '" + pet.getName() + "' eliminada con éxito.");
+        } catch (MascotaNoEncontradaException e) {
+            System.out.println("-> " + e.getMessage());
+        }
+    }
+
+    //Buscar el cliente dueño de una mascota, recorriendo el mapa de clientes
+    private static Client buscarDuenio(Map<String, Client> clientMap, String idMascota) {
+        for (Client client : clientMap.values()) {
+            if (client.getPetById(idMascota) != null) {
+                return client;
+            }
+        }
+        return null;
     }
 }

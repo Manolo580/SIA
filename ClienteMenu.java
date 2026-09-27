@@ -13,7 +13,8 @@ public class ClienteMenu {
             System.out.println("1. Registrar Cliente");
             System.out.println("2. Mostrar Clientes");
             System.out.println("3. Buscar Cliente");
-            System.out.println("4. Volver al Menu Principal");
+            System.out.println("4. Eliminar Cliente");
+            System.out.println("5. Volver al Menu Principal");
             System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
@@ -35,6 +36,10 @@ public class ClienteMenu {
                     break;
 
                 case "4":
+                    eliminarCliente(reader, clientMap, petMap);
+                    break;
+
+                case "5":
                     volver = true;
                     break;
 
@@ -116,5 +121,26 @@ public class ClienteMenu {
             throw new ClienteNoEncontradoException(rut);
         }
         return client;
+    }
+
+    //Eliminar un cliente y, en cascada, sus mascotas asociadas
+    private static void eliminarCliente(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
+        System.out.println("\n--- Eliminar Cliente ---");
+        System.out.println("Ingrese el RUT del cliente a eliminar: ");
+        String rut = reader.readLine().trim();
+
+        try {
+            Client client = obtenerClientePorRut(clientMap, rut);
+
+            //Eliminar tambien las mascotas del cliente para no dejar registros huerfanos
+            for (Pet pet : client.getPets()) {
+                petMap.remove(pet.getId());
+            }
+
+            clientMap.remove(rut);
+            System.out.println("-> Cliente '" + client.getName() + "' y sus mascotas fueron eliminados con éxito.");
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("-> " + e.getMessage());
+        }
     }
 }

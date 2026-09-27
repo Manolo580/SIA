@@ -12,7 +12,8 @@ public class MascotaMenu {
             System.out.println("MENU MASCOTAS\n");
             System.out.println("1. Agregar Mascota");
             System.out.println("2. Mostrar Mascotas");
-            System.out.println("3. Volver al Menu Principal");
+            System.out.println("3. Buscar Mascota");
+            System.out.println("4. Volver al Menu Principal");
             System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
@@ -27,6 +28,10 @@ public class MascotaMenu {
                     break;
 
                 case "3":
+                    buscarMascota(reader, petMap);
+                    break;
+
+                case "4":
                     volver = true;
                     break;
 
@@ -58,12 +63,11 @@ public class MascotaMenu {
         System.out.println("\nIngrese el RUT del dueño: ");
         String rutBuscado = reader.readLine().trim();
 
-        Client clienteEncontrado = clientMap.get(rutBuscado);
-
-        if (clienteEncontrado != null) {
+        try {
+            Client clienteEncontrado = ClienteMenu.obtenerClientePorRut(clientMap, rutBuscado);
             registrarMascota(reader, clienteEncontrado, petMap);
-        } else {
-            System.out.println("Error: No se encontró ningún cliente con ese RUT.");
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("-> " + e.getMessage());
         }
     }
 
@@ -173,5 +177,30 @@ public class MascotaMenu {
                 System.out.println("\nMascota: " + pet.getName() + " | ID: " + pet.getId() + " | Especie: " + pet.getSpecies() + " | Edad: " + pet.getAge() + pet.getDetalleEspecie());
             }
         }
+    }
+
+    //Buscar una mascota especifica por ID
+    private static void buscarMascota(BufferedReader reader, Map<String, Pet> petMap) throws IOException {
+        System.out.println("\n--- Buscar Mascota ---");
+        System.out.println("Ingrese el ID de la mascota: ");
+        String id = reader.readLine().trim();
+
+        try {
+            Pet pet = obtenerMascotaPorId(petMap, id);
+            System.out.println("\nMascota encontrada:");
+            System.out.println("Nombre: " + pet.getName() + " | ID: " + pet.getId() + " | Especie: " + pet.getSpecies() + " | Edad: " + pet.getAge() + pet.getDetalleEspecie());
+        } catch (MascotaNoEncontradaException e) {
+            System.out.println("-> " + e.getMessage());
+        }
+    }
+
+    //Obtener una mascota por ID, lanzando una excepcion si no existe
+    //Sin modificador de acceso para poder reutilizarlo desde otros menus (CitaMenu)
+    static Pet obtenerMascotaPorId(Map<String, Pet> petMap, String id) throws MascotaNoEncontradaException {
+        Pet pet = petMap.get(id);
+        if (pet == null) {
+            throw new MascotaNoEncontradaException(id);
+        }
+        return pet;
     }
 }

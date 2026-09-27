@@ -12,7 +12,8 @@ public class ClienteMenu {
             System.out.println("\n----- MENU CLIENTES -----");
             System.out.println("1. Registrar Cliente");
             System.out.println("2. Mostrar Clientes");
-            System.out.println("3. Volver al Menu Principal");
+            System.out.println("3. Buscar Cliente");
+            System.out.println("4. Volver al Menu Principal");
             System.out.println("Seleccione una opcion: ");
 
             String option = reader.readLine();
@@ -30,6 +31,10 @@ public class ClienteMenu {
                     break;
 
                 case "3":
+                    buscarCliente(reader, clientMap);
+                    break;
+
+                case "4":
                     volver = true;
                     break;
 
@@ -85,5 +90,31 @@ public class ClienteMenu {
                 System.out.println("Mascotas registradas: " + client.getPets().size());
             }
         }
+    }
+
+    //Buscar un cliente especifico por RUT
+    private static void buscarCliente(BufferedReader reader, Map<String, Client> clientMap) throws IOException {
+        System.out.println("\n--- Buscar Cliente ---");
+        System.out.println("Ingrese el RUT del cliente: ");
+        String rut = reader.readLine().trim();
+
+        try {
+            Client client = obtenerClientePorRut(clientMap, rut);
+            System.out.println("\nCliente encontrado:");
+            System.out.println("Nombre: " + client.getName() + " | RUT: " + client.getRut() + " | Tel: " + client.getPhone());
+            System.out.println("Mascotas registradas: " + client.getPets().size());
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("-> " + e.getMessage());
+        }
+    }
+
+    //Obtener un cliente por RUT, lanzando una excepcion si no existe
+    //Sin modificador de acceso para poder reutilizarlo desde otros menus (MascotaMenu, CitaMenu)
+    static Client obtenerClientePorRut(Map<String, Client> clientMap, String rut) throws ClienteNoEncontradoException {
+        Client client = clientMap.get(rut);
+        if (client == null) {
+            throw new ClienteNoEncontradoException(rut);
+        }
+        return client;
     }
 }

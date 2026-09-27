@@ -59,10 +59,12 @@ public class CitaMenu {
 
         System.out.println("Ingrese el RUT del dueño: ");
         String rutCita = reader.readLine().trim();
-        Client clienteCita = clientMap.get(rutCita);
+        Client clienteCita;
 
-        if (clienteCita == null) {
-            System.out.println("-> Error: No se encontró ningún cliente con ese RUT.");
+        try {
+            clienteCita = ClienteMenu.obtenerClientePorRut(clientMap, rutCita);
+        } catch (ClienteNoEncontradoException e) {
+            System.out.println("-> " + e.getMessage());
             return;
         }
 
@@ -78,10 +80,12 @@ public class CitaMenu {
 
         System.out.println("\nIngrese el ID de la mascota para la cita: ");
         String idMascotaCita = reader.readLine().trim();
-        Pet mascotaCita = clienteCita.getPetById(idMascotaCita);
+        Pet mascotaCita;
 
-        if (mascotaCita == null) {
-            System.out.println("-> Error: Esa mascota no pertenece a este cliente.");
+        try {
+            mascotaCita = obtenerMascotaDelCliente(clienteCita, idMascotaCita);
+        } catch (MascotaNoEncontradaException e) {
+            System.out.println("-> " + e.getMessage());
             return;
         }
 
@@ -398,5 +402,14 @@ public class CitaMenu {
         int mes = Integer.parseInt(partes[1]);
         int anio = Integer.parseInt(partes[2]);
         return anio * 10000 + mes * 100 + dia;
+    }
+
+    //Obtener una mascota del cliente por ID, lanzando una excepcion si no le pertenece
+    private static Pet obtenerMascotaDelCliente(Client client, String id) throws MascotaNoEncontradaException {
+        Pet pet = client.getPetById(id);
+        if (pet == null) {
+            throw new MascotaNoEncontradaException(id);
+        }
+        return pet;
     }
 }

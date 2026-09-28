@@ -297,7 +297,7 @@ public class CitaMenu {
     }
 
     //Generar ID
-    private static String generarIdCita(Map<String, Quote> quoteMap) {
+    static String generarIdCita(Map<String, Quote> quoteMap) {
         int numero = quoteMap.size() + 1;
         String idCita = String.valueOf(numero);
         while (quoteMap.containsKey(idCita)) {
@@ -308,7 +308,7 @@ public class CitaMenu {
     }
 
     //Citas pendientes
-    private static List<Quote> obtenerCitasPendientes(Map<String, Quote> quoteMap) {
+    static List<Quote> obtenerCitasPendientes(Map<String, Quote> quoteMap) {
         List<Quote> pendientes = new ArrayList<>();
         for (Quote cita : quoteMap.values()) {
             if (cita.getStatus().equals("Pendiente")) {
@@ -319,7 +319,7 @@ public class CitaMenu {
     }
 
     //Ordenar citas
-    private static void ordenarPorFechaYHora(List<Quote> pendientes) {
+    static void ordenarPorFechaYHora(List<Quote> pendientes) {
         int n = pendientes.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - 1 - i; j++) {
@@ -345,7 +345,7 @@ public class CitaMenu {
     }
 
     //Verificar resultado
-    private static boolean esServicioConResultado(Service service) {
+    static boolean esServicioConResultado(Service service) {
         String tipo = service.getType().toLowerCase();
         return tipo.contains("medic") || tipo.contains("médic") || tipo.contains("urgencia") || tipo.contains("vacuna");
     }
@@ -374,7 +374,7 @@ public class CitaMenu {
     }
 
     //Validar fecha
-    private static String formatearFecha(String texto) {
+    static String formatearFecha(String texto) {
         String[] partes = texto.split("-");
         if (partes.length != 3) {
             return null;
@@ -405,7 +405,7 @@ public class CitaMenu {
     }
 
     //Buscar mascota del cliente
-    private static Pet obtenerMascotaDelCliente(Client client, String id) throws MascotaNoEncontradaException {
+    static Pet obtenerMascotaDelCliente(Client client, String id) throws MascotaNoEncontradaException {
         Pet pet = client.getPetById(id);
         if (pet == null) {
             throw new MascotaNoEncontradaException(id);

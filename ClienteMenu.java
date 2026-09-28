@@ -58,7 +58,7 @@ public class ClienteMenu {
     //Registrar cliente
     private static void registrarCliente(BufferedReader reader, Map<String, Client> clientMap, Map<String, Pet> petMap) throws IOException {
         System.out.println("\n--- Registro de Cliente ---");
-        System.out.println("Ingrese su RUT (11222333-4): ");
+        System.out.println("Ingrese su RUT sin guion (112223334): ");
         String rut = reader.readLine().trim();
         System.out.println("Ingrese su nombre: ");
         String name = reader.readLine().trim();
@@ -67,6 +67,11 @@ public class ClienteMenu {
 
         if (rut.isEmpty()) {
             System.out.println("-> Error: El RUT no puede estar vacío.");
+            return;
+        }
+
+        if (!rut.matches("[0-9]+")) {
+            System.out.println("-> Error: El RUT solo puede contener números, sin guion.");
             return;
         }
 

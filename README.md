@@ -1,4 +1,4 @@
-# Sistema Veterinario (SIA)
+Sistema Veterinario
 
 Guía rápida de uso. Al abrir el programa, elige el modo:
 

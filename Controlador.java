@@ -41,15 +41,15 @@ public class Controlador {
             return "No hay clientes registrados.";
         }
 
-        StringBuilder texto = new StringBuilder();
+        String texto = "";
         for (Client client : clientMap.values()) {
-            texto.append("Cliente: ").append(client.getName())
-                    .append(" | RUT: ").append(client.getRut())
-                    .append(" | Tel: ").append(client.getPhone())
-                    .append(" | Mascotas: ").append(client.getPets().size())
-                    .append("\n");
+            texto += "Cliente: " + client.getName()
+                    + " | RUT: " + client.getRut()
+                    + " | Tel: " + client.getPhone()
+                    + " | Mascotas: " + client.getPets().size()
+                    + "\n";
         }
-        return texto.toString();
+        return texto;
     }
 
     //Buscar cliente
@@ -123,11 +123,18 @@ public class Controlador {
                 return "Error: La edad debe ser un número.";
             }
 
+            String razaFinal;
+            if (raza.isEmpty()) {
+                razaFinal = "Sin raza";
+            } else {
+                razaFinal = raza;
+            }
+
             Pet nuevaMascota;
             if (especie.equalsIgnoreCase("Perro")) {
-                nuevaMascota = new Dog(id, name, age, "Perro", raza.isEmpty() ? "Sin raza" : raza, "Sin evaluar");
+                nuevaMascota = new Dog(id, name, age, "Perro", razaFinal, "Sin evaluar");
             } else if (especie.equalsIgnoreCase("Gato")) {
-                nuevaMascota = new Cat(id, name, age, "Gato", raza.isEmpty() ? "Sin raza" : raza, "Sin evaluar");
+                nuevaMascota = new Cat(id, name, age, "Gato", razaFinal, "Sin evaluar");
             } else {
                 nuevaMascota = new Pet(id, name, age, especie);
             }
@@ -146,16 +153,16 @@ public class Controlador {
             return "No hay mascotas registradas.";
         }
 
-        StringBuilder texto = new StringBuilder();
+        String texto = "";
         for (Pet pet : petMap.values()) {
-            texto.append("Mascota: ").append(pet.getName())
-                    .append(" | ID: ").append(pet.getId())
-                    .append(" | Especie: ").append(pet.getSpecies())
-                    .append(" | Edad: ").append(pet.getAge())
-                    .append(pet.getDetalleEspecie())
-                    .append("\n");
+            texto += "Mascota: " + pet.getName()
+                    + " | ID: " + pet.getId()
+                    + " | Especie: " + pet.getSpecies()
+                    + " | Edad: " + pet.getAge()
+                    + pet.getDetalleEspecie()
+                    + "\n";
         }
-        return texto.toString();
+        return texto;
     }
 
     //Buscar mascota
@@ -233,13 +240,13 @@ public class Controlador {
             return "No hay servicios registrados.";
         }
 
-        StringBuilder texto = new StringBuilder();
+        String texto = "";
         for (Service servicio : serviceCatalog.values()) {
-            texto.append("ID: ").append(servicio.getIdService())
-                    .append(" | Tipo: ").append(servicio.getType())
-                    .append("\n");
+            texto += "ID: " + servicio.getIdService()
+                    + " | Tipo: " + servicio.getType()
+                    + "\n";
         }
-        return texto.toString();
+        return texto;
     }
 
     //Agendar cita
@@ -249,8 +256,13 @@ public class Controlador {
 
         try {
             client = ClienteMenu.obtenerClientePorRut(clientMap, rut);
+        } catch (ClienteNoEncontradoException e) {
+            return "Error: " + e.getMessage();
+        }
+
+        try {
             pet = CitaMenu.obtenerMascotaDelCliente(client, idMascota);
-        } catch (ClienteNoEncontradoException | MascotaNoEncontradaException e) {
+        } catch (MascotaNoEncontradaException e) {
             return "Error: " + e.getMessage();
         }
 
@@ -311,38 +323,42 @@ public class Controlador {
 
         CitaMenu.ordenarPorFechaYHora(pendientes);
 
-        StringBuilder texto = new StringBuilder();
+        String texto = "";
         for (Quote cita : pendientes) {
-            texto.append(cita.getDate()).append(" ").append(cita.getHour())
-                    .append(" - ").append(cita.getPet().getName())
-                    .append(" (").append(cita.getClient().getName()).append(") - ")
-                    .append(cita.getService().getType())
-                    .append("\n");
+            texto += cita.getDate() + " " + cita.getHour()
+                    + " - " + cita.getPet().getName()
+                    + " (" + cita.getClient().getName() + ") - "
+                    + cita.getService().getType()
+                    + "\n";
         }
-        return texto.toString();
+        return texto;
     }
 
     //Historial de citas
     public String historialCitas() {
-        StringBuilder texto = new StringBuilder();
+        String texto = "";
         boolean hayFinalizadas = false;
 
         for (Quote cita : quoteMap.values()) {
             if (cita.getStatus().equals("Finalizada")) {
                 hayFinalizadas = true;
-                texto.append("Cita: ").append(cita.getIdQuote())
-                        .append(" | ").append(cita.getDate()).append(" ").append(cita.getHour())
-                        .append(" | Cliente: ").append(cita.getClient().getName())
-                        .append(" | Mascota: ").append(cita.getPet().getName())
-                        .append(" | Servicio: ").append(cita.getService().getType());
+                texto += "Cita: " + cita.getIdQuote()
+                        + " | " + cita.getDate() + " " + cita.getHour()
+                        + " | Cliente: " + cita.getClient().getName()
+                        + " | Mascota: " + cita.getPet().getName()
+                        + " | Servicio: " + cita.getService().getType();
                 if (cita.getResultado() != null) {
-                    texto.append(" | Resultado: ").append(cita.getResultado());
+                    texto += " | Resultado: " + cita.getResultado();
                 }
-                texto.append("\n");
+                texto += "\n";
             }
         }
 
-        return hayFinalizadas ? texto.toString() : "Aún no hay citas finalizadas.";
+        if (hayFinalizadas) {
+            return texto;
+        } else {
+            return "Aún no hay citas finalizadas.";
+        }
     }
 
     //Finalizar cita
